@@ -1,6 +1,8 @@
 import React from 'react';
 import './App.css';
 import { Timetable } from './Timetable/timeTable';
+import { Provider, teamsTheme } from '@fluentui/react-northstar';
+
 
 import {
   BrowserRouter as Router,
@@ -14,6 +16,7 @@ function App() {
 
   return (
       <Router>
+        <Provider theme={teamsTheme}>
       <div className="main-background">
         <ul>
           <li>
@@ -34,6 +37,7 @@ function App() {
           </Route>
         </Switch>
       </div>
+      </Provider>
     </Router>
   );
 }
@@ -43,8 +47,5 @@ export default App;
 function Home() {
   return (
     <div className="App">
-      <header className="App-header">
-
-      </header>
 </div>
   )}

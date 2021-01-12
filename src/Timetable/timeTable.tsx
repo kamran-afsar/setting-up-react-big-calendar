@@ -7,12 +7,16 @@ import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './timeTable.css';
 import 'font-awesome/css/font-awesome.min.css';
+import { Dialog } from '@fluentui/react-northstar';
 
 const localizer = momentLocalizer(moment);
 export function Timetable() {
     const [timeTableItems, setTimetableItems] = React.useState([] as any);
+    const [loader, setLoader] = React.useState(true);
+    const [popup, setPopup] = React.useState(false);
     React.useEffect(() => {
         getCalendarDataApi().then((res: any) => {
+            setLoader(false);
             setTimetableItems(res);
         });
     }, []);
@@ -29,13 +33,6 @@ export function Timetable() {
         });
         return events;
     }
-    const newEvents = () => {
-        const sTime = new Date('2020-07-16T06:27:09.607Z');
-        const eTime = new Date('2020-07-16T09:27:09.607Z');
-        console.log(sTime, "////", eTime)
-        const ev = [{id:"1",title:"first",start:sTime,end:eTime},{id:"2",title:"second",start:sTime,end:eTime}];
-        return ev;
-    }
     const eventStyleGetter = (event: any, start: any, end: any, isSelected: any) => {
         const backgroundColor = '#' + event.hexColor;
         const style = {
@@ -47,11 +44,12 @@ export function Timetable() {
         };
     }
 
-
+    const handleSelect = (info:any) => {console.log(info) }
+    const handleClick = () => {setPopup(true)}
     const isEvents = timeTableItems && timeTableItems.length > 0;
     return (<div>
 
-        <div style={{ height: '500pt' }}>
+        {!loader && !popup && <div style={{ height: '500pt' }}>
             {isEvents && <Calendar className="bg-calendar"
                 events={getEvents()}
                 //events={newEvents()}
@@ -61,12 +59,15 @@ export function Timetable() {
                 defaultDate={moment().toDate()}
                 defaultView={'week'}
                 eventPropGetter={eventStyleGetter}
-                onSelectEvent={() => alert('I am an event')}
+                onSelectEvent={() => handleClick()}
                 toolbar={false}
-                
+                onSelectSlot={(info) => handleSelect(info)}
+                selectable
             />
             }
         </div>
+}
+        {popup && <Dialog open={true} header={<h1>Events </h1>} cancelButton="Cancel" onCancel={() => setPopup(false)}/> }
     </div>)
 }
 
